@@ -49,18 +49,37 @@ class StudentService {
     //   - si no existe, crearlo y agregarlo a "created"
     // Un solo estudiante inválido NO debe tumbar el resto del lote: atrapa el error por estudiante, no solo por el arreglo completo.
     async bulkCreate(studentsData: StudentInput[]): Promise<BulkCreateResult>{
-        try{
-            const skipped: string[] =  [];
-            const created: string[] = [];
+        const created: StudentDocument[] = [];
+        const skipped: { email: string; reason: string }[] = [];
+        const seen = new Set<string>();
 
-            
-
-
-        }catch(error){
-
+        for (const data of studentsData) {
+            const email = (data as StudentInput)?.email;
+            const emailLabel = typeof email === "string" ? email : "unknown";
+            try {
+                if (!email || typeof email !== "string") {
+                    skipped.push({ email: emailLabel, reason: "Missing or invalid email" });
+                    continue;
+                }
+                if (seen.has(email)) {
+                    skipped.push({ email, reason: "El estudiante con este email ya existe" });
+                    continue;
+                }
+                const existing = await StudentModel.findOne({ email });
+                if (existing) {
+                    seen.add(email);
+                    skipped.push({ email, reason: "El estudiante con este email ya existe" });
+                    continue;
+                }
+                const doc = await StudentModel.create(data);
+                seen.add(email);
+                created.push(doc);
+            } catch (error: any) {
+                skipped.push({ email: emailLabel, reason: error?.message ?? "Invalid student data" });
+            }
         }
 
-        throw new Error("Not implemented");
+        return { created, skipped };
     }
 
     // TODO (Reto 2 - Search): implementar.

@@ -56,7 +56,16 @@ class StudentController{
 
     // TODO (Reto 1 - Bulk create): validar que request.body sea un arreglo y delegar en studentService.bulkCreate
     async bulkCreate(request: Request, response: Response){
-        response.status(501).json({ message: "Not implemented" });
+        try{
+            if (!Array.isArray(request.body)) {
+                response.status(400).json({ message: "Request body must be an array of students" });
+                return;
+            }
+            const result = await studentService.bulkCreate(request.body);
+            response.status(200).json(result);
+        }catch(error){
+            response.status(500).json(error);
+        }
     }
 
     // TODO (Reto 2 - Search): tomar los query params y delegar en studentService.search
