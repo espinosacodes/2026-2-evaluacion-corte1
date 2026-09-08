@@ -70,18 +70,12 @@ class StudentController{
 
     // TODO (Reto 2 - Search): tomar los query params y delegar en studentService.search
     async search(request: Request, response: Response){
-      /*
-        try(){
-            const params = request.query;
-
+        try{
+            const students = await studentService.search(request.query);
+            response.status(200).json(students);
         }catch(error){
             response.status(500).json(error);
         }
-            */
-
-
-        response.status(501).json({ message: "Not implemented" });
-
     }
 
     // TODO (Reto 3 - Delete): validar el email y delegar en studentService.deleteStudent (404/mensaje si no existe)
