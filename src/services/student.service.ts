@@ -105,7 +105,7 @@ class StudentService {
     async deleteStudent(email: string): Promise<StudentDocument | null>{
         
         try{
-            const deleted:StudentDocument | null = await StudentModel.findOneAndUpdate(
+            const deleted:StudentDocument | null = await StudentModel.findOneAndDelete(
                 { email }
             );
             return deleted;
