@@ -10,7 +10,7 @@ studentRouter.post("/bulk", studentController.bulkCreate);
 
 // TODO (Reto 2 - Search): agregar GET /students/search -> studentController.search
 // IMPORTANTE: debe registrarse ANTES que GET /:email, o Express interpretará "search" como un email.
-
+studentRouter.get('/search', studentController.search)
 studentRouter.get('/:email', studentController.getByEmail);
 studentRouter.put("/update/:email", studentController.updateStudent);
 
