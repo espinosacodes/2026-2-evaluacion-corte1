@@ -92,7 +92,19 @@ class StudentService {
     // TODO (Reto 3 - Delete): implementar.
     // Debe eliminar el estudiante con ese email y devolver el documento eliminado, o null si no existía.
     async deleteStudent(email: string): Promise<StudentDocument | null>{
-        throw new Error("Not implemented");
+        
+        try{
+            const deleted:StudentDocument | null = await StudentModel.findOneAndUpdate(
+                { email }
+            );
+            return deleted;
+        }catch(error){
+
+            console.log(this.handleError(error));
+            throw error;
+        }
+
+
     }
 
     handleError(error: any){

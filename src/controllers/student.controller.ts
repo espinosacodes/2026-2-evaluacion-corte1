@@ -70,13 +70,44 @@ class StudentController{
 
     // TODO (Reto 2 - Search): tomar los query params y delegar en studentService.search
     async search(request: Request, response: Response){
+      /*
+        try(){
+            const params = request.query;
+
+        }catch(error){
+            response.status(500).json(error);
+        }
+            */
+
+
         response.status(501).json({ message: "Not implemented" });
+
     }
 
     // TODO (Reto 3 - Delete): validar el email y delegar en studentService.deleteStudent (404/mensaje si no existe)
     async deleteStudent(request: Request, response: Response){
-        response.status(501).json({ message: "Not implemented" });
+        
+        try{
+            const email = request.params.email;
+            if(typeof email !== "string"){
+                
+                response.status(400).json( { message : "pon email valido"});    
+                return;
+            }
+            const student: StudentDocument | null = await studentService.deleteStudent(email);
+            if(student === null){
+                response.status(400).json( {message: `User ${email} not found  `});
+                return;
+            }
+            
+            response.status(200).json(student);
+        }catch(error){
+            response.status(500).json(error);
+        }
     }
-}
+
+
+    }
+
 
 export const studentController = new StudentController();
